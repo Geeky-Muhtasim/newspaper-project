@@ -1,0 +1,27 @@
+<section>
+  <article>
+    <h1><%= news.title %></h1>
+    <p><small>Category: <%= news.category %> | Published on: <%= news.created_at %></small></p>
+    <div>
+      <p><%= news.content %></p>
+    </div>
+  </article>
+
+  <!-- Related News Section -->
+  <aside>
+    <h2>Related News</h2>
+    <div class="related-news">
+      <% if (relatedNews.length > 0) { %>
+        <% relatedNews.forEach((item) => { %>
+          <article>
+            <h3><a href="/news/<%= item.id %>"><%= item.title %></a></h3>
+            <p><%= item.content.slice(0, 100) %>...</p>
+          </article>
+        <% }); %>
+      <% } else { %>
+        <p>No related news available.</p>
+      <% } %>
+    </div>
+  </aside>
+  <a href="/">Back to Home</a>
+</section>

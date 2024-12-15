@@ -1,0 +1,16 @@
+<h1>Edit News</h1>
+<form method="POST" action="/admin/news/edit/<%= news.id %>">
+    <label for="title">Title:</label>
+    <input type="text" name="title" id="title" value="<%= news.title %>" required>
+    <label for="content">Content:</label>
+    <textarea name="content" id="content" required><%= news.content %></textarea>
+    <label for="category">Category:</label>
+    <select name="category_id" id="category" required>
+        <% categories.forEach((category) => { %>
+            <option value="<%= category.id %>" <%= category.id === news.category_id ? 'selected' : '' %>>
+                <%= category.name %>
+            </option>
+        <% }); %>
+    </select>
+    <button type="submit">Save Changes</button>
+</form>

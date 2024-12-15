@@ -1,0 +1,17 @@
+<section>
+    <h2><%= category %> News</h2>
+    <div class="news-list">
+      <% if (news && news.length > 0) { %>
+        <% news.forEach((item) => { %>
+          <article>
+            <h3><%= item.title %></h3>
+            <p><%= item.content.slice(0, 200) %>...</p>
+            <a href="/news/<%= item.id %>">Read More</a>
+          </article>
+        <% }); %>
+      <% } else { %>
+        <p>No news available for this category.</p>
+      <% } %>
+    </div>
+  </section>
+  

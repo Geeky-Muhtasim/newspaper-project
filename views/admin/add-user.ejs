@@ -1,0 +1,13 @@
+<h1>Add User</h1>
+<form method="POST" action="/admin/users/add">
+    <label for="username">Username:</label>
+    <input type="text" name="username" id="username" required>
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password" required>
+    <label for="role">Role:</label>
+    <select name="role" id="role" required>
+        <option value="admin">Admin</option>
+        <option value="editor">Editor</option>
+    </select>
+    <button type="submit">Add User</button>
+</form>

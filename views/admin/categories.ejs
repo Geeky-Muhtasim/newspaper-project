@@ -1,0 +1,21 @@
+<h1>Manage Categories</h1>
+<a href="/admin/categories/add">Add Category</a>
+<table>
+    <thead>
+        <tr>
+            <th>Category Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% categories.forEach((category) => { %>
+            <tr>
+                <td><%= category.name %></td>
+                <td>
+                    <a href="/admin/categories/edit/<%= category.id %>">Edit</a>
+                    <a href="/admin/categories/delete/<%= category.id %>">Delete</a>
+                </td>
+            </tr>
+        <% }); %>
+    </tbody>
+</table>

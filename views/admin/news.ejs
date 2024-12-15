@@ -1,0 +1,23 @@
+<h1>Manage News</h1>
+<a href="/admin/news/add">Add News</a>
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% news.forEach((item) => { %>
+            <tr>
+                <td><%= item.title %></td>
+                <td><%= item.category %></td>
+                <td>
+                    <a href="/admin/news/edit/<%= item.id %>">Edit</a>
+                    <a href="/admin/news/delete/<%= item.id %>">Delete</a>
+                </td>
+            </tr>
+        <% }); %>
+    </tbody>
+</table>

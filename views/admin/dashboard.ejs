@@ -1,0 +1,52 @@
+<h1>Welcome to the Admin Dashboard</h1>
+<p>You are logged in as: <%= role %></p>
+
+<section>
+    <h2>Statistics</h2>
+    <ul>
+        <li>Total News Articles: <%= stats.totalNews %></li>
+        <li>Total Categories: <%= stats.totalCategories %></li>
+        <% if (role === 'admin') { %>
+            <li>Total Users: <%= stats.totalUsers %></li>
+        <% } %>
+    </ul>
+</section>
+
+<section>
+    <h2>Recent Activity</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% recentNews.forEach((news) => { %>
+                <tr>
+                    <td><%= news.id %></td>
+                    <td><%= news.title %></td>
+                    <td><%= news.created_at.toISOString().slice(0, 10) %></td>
+                    <td>
+                        <a href="/admin/news/edit/<%= news.id %>">Edit</a>
+                        <a href="/admin/news/delete/<%= news.id %>">Delete</a>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</section>
+
+<nav>
+    <ul>
+        <li><a href="/admin/news">Manage News</a></li>
+        <li><a href="/admin/categories">Manage Categories</a></li>
+        <% if (role === 'admin') { %>
+            <li><a href="/admin/users">Manage Users</a></li>
+            <li><a href="/admin/users/add">Add User</a></li>
+        <% } %>
+        <li><a href="/admin/logout">Logout</a></li>
+    </ul>
+</nav>
