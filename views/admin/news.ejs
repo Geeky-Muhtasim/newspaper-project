@@ -1,23 +1,30 @@
 <h1>Manage News</h1>
-<a href="/admin/news/add">Add News</a>
+<a href="/admin/dashboard" class="back-to-dashboard">Back to Dashboard</a>
+
 <table>
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% news.forEach((item) => { %>
-            <tr>
-                <td><%= item.title %></td>
-                <td><%= item.category %></td>
-                <td>
-                    <a href="/admin/news/edit/<%= item.id %>">Edit</a>
-                    <a href="/admin/news/delete/<%= item.id %>">Delete</a>
-                </td>
-            </tr>
-        <% }); %>
-    </tbody>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Category</th>
+      <th>Image</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% news.forEach((article) => { %>
+      <tr>
+        <td><%= article.title %></td>
+        <td><%= article.category %></td>
+        <td>
+          <% if (article.image_url) { %>
+            <img src="<%= article.image_url %>" alt="News Image" width="100">
+          <% } %>
+        </td>
+        <td>
+          <a href="/admin/news/edit/<%= article.id %>">Edit</a>
+          <a href="/admin/news/delete/<%= article.id %>" onclick="return confirm('Are you sure?')">Delete</a>
+        </td>
+      </tr>
+    <% }); %>
+  </tbody>
 </table>

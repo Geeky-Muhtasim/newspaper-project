@@ -1,27 +1,28 @@
 <section>
-  <article>
-    <h1><%= news.title %></h1>
-    <p><small>Category: <%= news.category %> | Published on: <%= news.created_at %></small></p>
-    <div>
-      <p><%= news.content %></p>
-    </div>
-  </article>
+  <h2><%= news.title %></h2>
+  <p><strong>Category:</strong> <%= news.category_name %></p>
 
-  <!-- Related News Section -->
-  <aside>
-    <h2>Related News</h2>
-    <div class="related-news">
-      <% if (relatedNews.length > 0) { %>
-        <% relatedNews.forEach((item) => { %>
-          <article>
-            <h3><a href="/news/<%= item.id %>"><%= item.title %></a></h3>
-            <p><%= item.content.slice(0, 100) %>...</p>
-          </article>
-        <% }); %>
-      <% } else { %>
-        <p>No related news available.</p>
-      <% } %>
-    </div>
-  </aside>
-  <a href="/">Back to Home</a>
+  <!-- Display image if available -->
+  <% if (news.image_url) { %>
+    <img src="<%= news.image_url %>" alt="News Image" style="max-width: 100%; height: auto; margin: 20px 0;">
+  <% } %>
+
+  <p><%= news.content %></p>
+</section>
+
+<section>
+  <h3>Related News</h3>
+  <% if (relatedNews && relatedNews.length > 0) { %>
+    <ul style="list-style: none; padding: 0;">
+      <% relatedNews.forEach((related) => { %>
+        <li style="margin-bottom: 10px;">
+          <a href="/news/<%= related.id %>" style="text-decoration: none; color: #007bff;">
+            <strong><%= related.title %></strong>
+          </a>
+        </li>
+      <% }); %>
+    </ul>
+  <% } else { %>
+    <p>No related news available.</p>
+  <% } %>
 </section>

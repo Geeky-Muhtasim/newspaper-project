@@ -1,9 +1,17 @@
 <section>
-    <h2>Categories</h2>
-    <ul>
-      <li><a href="/categories/Politics">Politics</a></li>
-      <li><a href="/categories/Sports">Sports</a></li>
-      <li><a href="/categories/Technology">Technology</a></li>
-    </ul>
-  </section>
-  
+  <h2>Latest News</h2>
+  <% if (news && news.length > 0) { %>
+    <div class="news-list">
+      <% news.forEach((article) => { %>
+        <div class="news-item">
+          <h3><a href="/news/<%= article.id %>"><%= article.title %></a></h3>
+          <p><strong>Category:</strong> <%= article.category_name %></p>
+          <p><%= article.content.slice(0, 100) %>...</p> <!-- Show a short preview -->
+          <a href="/news/<%= article.id %>">Read more</a>
+        </div>
+      <% }); %>
+    </div>
+  <% } else { %>
+    <p>No news available at the moment.</p>
+  <% } %>
+</section>

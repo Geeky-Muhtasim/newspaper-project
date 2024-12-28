@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('../config/db');
+const upload = require('../config/multer'); // Multer configuration for file uploads
 const router = express.Router();
 
 // Middleware for checking authentication
@@ -14,7 +15,8 @@ const isAuthenticated = (req, res, next) => {
 router.get('/', isAuthenticated, (req, res) => {
     db.query(
         `SELECT news.*, categories.name AS category 
-         FROM news JOIN categories ON news.category_id = categories.id`, 
+         FROM news 
+         JOIN categories ON news.category_id = categories.id`, 
         (err, results) => {
             if (err) {
                 console.error('Database Error:', err);
@@ -37,16 +39,20 @@ router.get('/add', isAuthenticated, (req, res) => {
 });
 
 // Handle Adding News
-router.post('/add', isAuthenticated, (req, res) => {
+router.post('/add', isAuthenticated, upload.single('image'), (req, res) => {
     const { title, content, category_id } = req.body;
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null; // Save image path if uploaded
+
     db.query(
-        'INSERT INTO news (title, content, category_id) VALUES (?, ?, ?)',
-        [title, content, category_id],
+        'INSERT INTO news (title, content, category_id, image_url) VALUES (?, ?, ?, ?)',
+        [title, content, category_id, imageUrl],
         (err) => {
             if (err) {
                 console.error('Database Error:', err);
-                return res.status(500).send('Server Error');
+                req.flash('error', 'Failed to add news. Please try again.');
+                return res.redirect('/admin/news');
             }
+            req.flash('success', 'News added successfully!');
             res.redirect('/admin/news');
         }
     );
@@ -65,26 +71,38 @@ router.get('/edit/:id', isAuthenticated, (req, res) => {
                 console.error('Database Error:', err);
                 return res.status(500).send('Server Error');
             }
-            res.render('admin/edit-news', { title: 'Edit News', news: newsResults[0], categories });
+            res.render('admin/edit-news', { 
+                title: 'Edit News', 
+                news: newsResults[0], 
+                categories 
+            });
         });
     });
 });
 
 // Handle Editing News
-router.post('/edit/:id', isAuthenticated, (req, res) => {
+router.post('/edit/:id', isAuthenticated, upload.single('image'), (req, res) => {
     const newsId = req.params.id;
     const { title, content, category_id } = req.body;
-    db.query(
-        'UPDATE news SET title = ?, content = ?, category_id = ? WHERE id = ?',
-        [title, content, category_id, newsId],
-        (err) => {
-            if (err) {
-                console.error('Database Error:', err);
-                return res.status(500).send('Server Error');
-            }
-            res.redirect('/admin/news');
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+    const query = imageUrl
+        ? 'UPDATE news SET title = ?, content = ?, category_id = ?, image_url = ? WHERE id = ?'
+        : 'UPDATE news SET title = ?, content = ?, category_id = ? WHERE id = ?';
+
+    const params = imageUrl
+        ? [title, content, category_id, imageUrl, newsId]
+        : [title, content, category_id, newsId];
+
+    db.query(query, params, (err) => {
+        if (err) {
+            console.error('Database Error:', err);
+            req.flash('error', 'Failed to update news. Please try again.');
+            return res.redirect('/admin/news');
         }
-    );
+        req.flash('success', 'News updated successfully!');
+        res.redirect('/admin/news');
+    });
 });
 
 // Delete News
@@ -93,8 +111,10 @@ router.get('/delete/:id', isAuthenticated, (req, res) => {
     db.query('DELETE FROM news WHERE id = ?', [newsId], (err) => {
         if (err) {
             console.error('Database Error:', err);
-            return res.status(500).send('Server Error');
+            req.flash('error', 'Failed to delete news. Please try again.');
+            return res.redirect('/admin/news');
         }
+        req.flash('success', 'News deleted successfully!');
         res.redirect('/admin/news');
     });
 });

@@ -11,17 +11,37 @@
     <h1>Bangladesh Newspaper</h1>
     <nav>
       <a href="/">Home</a>
-      <a href="/categories/Politics">Politics</a>
-      <a href="/categories/Sports">Sports</a>
-      <a href="/categories/Technology">Technology</a>
-      <a href="/contact">Contact</a>
+      <% if (categories && categories.length > 0) { %>
+        <% categories.forEach((category) => { %>
+          <a href="/categories/<%= category.name %>"><%= category.name %></a>
+        <% }); %>
+      <% } %>
+      <a href="/admin/login" class="login-button">Login</a>
     </nav>
   </header>
+
+  <!-- Flash Notifications -->
+  <% if (success) { %>
+    <div class="alert alert-success"><%= success %></div>
+  <% } %>
+  <% if (error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+  <% } %>
+
   <main>
     <%- include(content) %>
   </main>
+
   <footer>
     <p>&copy; 2024 Bangladesh Newspaper</p>
   </footer>
+
+  <!-- Optional: Auto-Dismiss Flash Messages -->
+  <script>
+    setTimeout(() => {
+      const alerts = document.querySelectorAll('.alert');
+      alerts.forEach(alert => alert.style.display = 'none');
+    }, 3000);
+  </script>
 </body>
 </html>

@@ -3,17 +3,19 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const session = require('express-session');
 const db = require('./config/db');
-
+const flash = require('connect-flash');
 // Initialize environment variables
 dotenv.config();
 
 // Initialize Express app
 const app = express();
 
+
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true })); // Parse form data
 app.use(bodyParser.json()); // Parse JSON data
 app.use(express.static('public')); // Serve static files
+app.use('/uploads', express.static('public/uploads'));
 app.set('view engine', 'ejs'); // Set EJS as the template engine
 
 // Session Middleware
@@ -22,6 +24,16 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
 }));
+
+// Flash Middleware
+app.use(flash());
+
+// Expose flash messages to views
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+});
 
 // Import Routes
 const adminRoutes = require('./routes/admin'); // Admin login and dashboard
